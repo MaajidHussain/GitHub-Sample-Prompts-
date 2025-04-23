@@ -1,0 +1,376 @@
+1) To create TDD unit test cases for the Policy class, we will use JUnit 5 (as it is commonly used with Spring Boot projects). Below is an example of how you can write unit test cases for the specified conditions.
+Explanation:
+Each test case validates a specific field of the Policy class.
+The Policy class fields are validated using assertions.
+Mock data is used to test both valid and invalid scenarios.
+
+Code Example:
+Policy Class (Assumed Structure)
+
+public class Policy {
+    private String email;
+    private String accountNumber;
+    private String policyNumber;
+    private String firstName;
+    private String lastName;
+    private String postalCode;
+    private String phone;
+    private String producerCode;
+    private String groupCode;
+    private String masterCode;
+    private String city;
+    private String state;
+    private String effectiveDate;
+    private String expirationDate;
+    private double annualPremium;
+
+    // Getters and Setters
+}
+
+Notes:
+Replace the Policy class with your actual implementation.
+Ensure that the Policy class has proper getters and setters for all fields.
+Use meaningful test data to cover edge cases.
+
+
+
+2) Create a class here
+
+Below is an example of a Policy class based on the fields and constraints provided:
+
+public class Policy {
+    private String email;
+    private String accountNumber;
+    private String policyNumber;
+    private String firstName;
+    private String lastName;
+    private String postalCode;
+    private String phone;
+    private String producerCode;
+    private String groupCode;
+    private String masterCode;
+    private String city;
+    private String state;
+    private String effectiveDate;
+    private String expirationDate;
+    private double annualPremium;
+
+    // Getters and Setters
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getPolicyNumber() {
+        return policyNumber;
+    }
+
+    public void setPolicyNumber(String policyNumber) {
+        this.policyNumber = policyNumber;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getProducerCode() {
+        return producerCode;
+    }
+
+    public void setProducerCode(String producerCode) {
+        this.producerCode = producerCode;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public String getMasterCode() {
+        return masterCode;
+    }
+
+    public void setMasterCode(String masterCode) {
+        this.masterCode = masterCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(String effectiveDate) {
+        this.effectiveDate = effectiveDate;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public double getAnnualPremium() {
+        return annualPremium;
+    }
+
+    public void setAnnualPremium(double annualPremium) {
+        this.annualPremium = annualPremium;
+    }
+}
+
+
+3) Update code for defect fix - Invalid HomeInsurancePolicy object parameter in Put method
+
+To fix the defect related to an invalid HomeInsurancePolicy object parameter in the PUT method, you need to validate the input object before processing it. Below is an updated example of how you can handle this in a Spring Boot controller:
+Updated Code for PUT Method
+
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping("/api/home-insurance")
+public class HomeInsurancePolicyController {
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updatePolicy(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody HomeInsurancePolicy policy) {
+
+        // Validate the ID
+        if (id == null || id <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid policy ID");
+        }
+
+        // Validate the policy object
+        if (policy == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Policy object cannot be null");
+        }
+
+        // Additional validation logic (if required)
+        if (policy.getPolicyNumber() == null || policy.getPolicyNumber().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Policy number is required");
+        }
+
+        // Simulate update logic
+        // Example: homeInsuranceService.updatePolicy(id, policy);
+
+        return ResponseEntity.ok("Policy updated successfully");
+    }
+}
+
+
+
+
+4) Update code for defect fix - Invalid HomeInsurancePolicy object parameter in Put method. (InsurancePolicyController.cs)
+
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+[ApiController]
+[Route("api/[controller]")]
+public class InsurancePolicyController : ControllerBase
+{
+    [HttpPut("{id}")]
+    public IActionResult UpdatePolicy(int id, [FromBody] HomeInsurancePolicy policy)
+    {
+        // Validate the ID
+        if (id <= 0)
+        {
+            return BadRequest("Invalid policy ID.");
+        }
+
+        // Validate the policy object
+        if (policy == null)
+        {
+            return BadRequest("Policy object cannot be null.");
+        }
+
+        // Additional validation logic
+        if (string.IsNullOrWhiteSpace(policy.PolicyNumber))
+        {
+            return BadRequest("Policy number is required.");
+        }
+
+        // Simulate update logic
+        // Example: _policyService.UpdatePolicy(id, policy);
+
+        return Ok("Policy updated successfully.");
+    }
+}
+
+public class HomeInsurancePolicy
+{
+    [Required(ErrorMessage = "Policy number is required.")]
+    public string PolicyNumber { get; set; }
+
+    public string PolicyHolderName { get; set; }
+
+    // Add other fields as needed
+}
+
+
+
+
+5)SonarQube errors - Refactor code to fix cyclomatic complexity issue (LongMethod.cs)
+
+To address the cyclomatic complexity issue in LongMethod.cs, you can refactor the method by breaking it into smaller, more manageable methods. This reduces the number of decision points in a single method, improving readability and maintainability.
+Example Refactored Code
+
+
+public class LongMethod
+{
+    public void ProcessData()
+    {
+        ValidateInput();
+        PerformCalculations();
+        SaveResults();
+        NotifyUser();
+    }
+
+    private void ValidateInput()
+    {
+        // Input validation logic
+        if (/* condition */)
+        {
+            // Handle validation
+        }
+    }
+
+    private void PerformCalculations()
+    {
+        // Calculation logic
+        if (/* condition */)
+        {
+            // Perform specific calculation
+        }
+        else
+        {
+            // Perform alternative calculation
+        }
+    }
+
+    private void SaveResults()
+    {
+        // Save results logic
+        if (/* condition */)
+        {
+            // Save to database
+        }
+    }
+
+    private void NotifyUser()
+    {
+        // Notification logic
+        if (/* condition */)
+        {
+            // Send email
+        }
+    }
+}
+
+
+
+6) what was the code before refactorised?
+
+The code before refactoring likely consisted of a single long method with multiple decision points, making it difficult to read and maintain. Here's an example of what the unrefactored ProcessData method might have looked like:
+
+public class LongMethod
+{
+    public void ProcessData()
+    {
+        // Input validation logic
+        if (/* condition */)
+        {
+            // Handle validation
+        }
+
+        // Calculation logic
+        if (/* condition */)
+        {
+            // Perform specific calculation
+        }
+        else
+        {
+            // Perform alternative calculation
+        }
+
+        // Save results logic
+        if (/* condition */)
+        {
+            // Save to database
+        }
+
+        // Notification logic
+        if (/* condition */)
+        {
+            // Send email
+        }
+    }
+}
+
